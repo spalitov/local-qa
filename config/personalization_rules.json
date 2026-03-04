@@ -1,0 +1,10 @@
+{
+  "required": [
+    "Address the customer\u2019s specific request or issue from prior messages",
+    "Avoid irrelevant content not supported by the conversation"
+  ],
+  "not_allowed": [
+    "Generic filler not tied to the case",
+    "Asking for info already provided (unless you explain why you still need it)"
+  ]
+}

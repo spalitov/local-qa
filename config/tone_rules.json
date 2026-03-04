@@ -1,0 +1,38 @@
+{
+  "polished": {
+    "description": "Clear, confident, concise. Professional but not stiff. No slang.",
+    "do": [
+      "Use concise sentences",
+      "Be direct and helpful"
+    ],
+    "dont": [
+      "Use slang",
+      "Overuse exclamation points",
+      "Be overly casual"
+    ]
+  },
+  "casual": {
+    "description": "Friendly and conversational. Contractions OK. Still professional.",
+    "do": [
+      "Sound approachable",
+      "Use natural contractions when appropriate"
+    ],
+    "dont": [
+      "Be sloppy",
+      "Be sarcastic",
+      "Overuse filler phrases"
+    ]
+  },
+  "formal": {
+    "description": "Professional, precise, courteous. Minimal contractions. Structured.",
+    "do": [
+      "Use explicit wording",
+      "Maintain neutral courtesy"
+    ],
+    "dont": [
+      "Use jokes",
+      "Use informal phrases",
+      "Be overly familiar"
+    ]
+  }
+}

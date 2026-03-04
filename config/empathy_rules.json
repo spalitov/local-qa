@@ -1,0 +1,17 @@
+{
+  "when_required": [
+    "Customer expresses frustration, disappointment, anger, or distress",
+    "Customer reports a problem (broken, not working, charged incorrectly, delay)",
+    "Customer requests refund/cancellation due to negative experience"
+  ],
+  "required_components": [
+    "Acknowledge the customer\u2019s situation/emotion",
+    "If appropriate, brief apology",
+    "Clear next step or ownership statement"
+  ],
+  "not_allowed": [
+    "Blaming the customer",
+    "Dismissive language",
+    "Arguing about feelings"
+  ]
+}

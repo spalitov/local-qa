@@ -1,0 +1,32 @@
+models:
+  llm:
+    provider: "ollama"
+    base_url: "http://localhost:11434"
+    model: "llama3.1:8b"
+    temperature: 0.0
+    timeout_s: 180
+
+  repetition_embeddings:
+    model: "sentence-transformers/all-MiniLM-L6-v2"
+
+thresholds:
+  correct_grammar_max_grammar_errors: 0
+  no_typos_max_typos: 0
+  no_repetition_max_cosine: 0.86
+
+grammar_tool:
+  language: "en-US"
+
+scoring:
+  local_authoritative:
+    - correct_grammar
+    - no_typos
+    - no_repetition
+  llm_categories:
+    - understandable
+    - preferred_tone_followed
+    - empathy
+    - personalization
+
+output:
+  include_full_conversation_json: true
