@@ -30,6 +30,11 @@ def _normalize_tone(value: Any) -> str:
 
 
 def _parse_json_list(raw: Any, field_name: str) -> List[Any]:
+    if isinstance(raw, list):
+        return raw
+    if isinstance(raw, dict):
+        return [raw]
+
     text = str(raw or "").strip()
     if not text:
         return []
@@ -83,6 +88,35 @@ def _parse_conversation(raw: Any) -> List[Message]:
     return messages
 
 
+def _parse_blocklisted_words_from_any(raw: Any) -> List[str]:
+    if isinstance(raw, list):
+        out: List[str] = []
+        for item in raw:
+            s = str(item or "").strip()
+            if s:
+                out.append(s)
+        return out
+    return _parse_blocklisted_words(raw)
+
+
+def scenario_to_audit_input(scenario: Dict[str, Any], row_num: int) -> AuditInput:
+    send_id = str(scenario.get("id", "")).strip()
+    if not send_id:
+        raise ValueError(f"JSON scenario row {row_num}: missing id.")
+
+    tone_raw = scenario.get("messageTone", scenario.get("preferred_tone"))
+    conversation_raw = scenario.get("conversation", [])
+
+    return AuditInput(
+        id=send_id,
+        preferred_tone=_normalize_tone(tone_raw),  # type: ignore[arg-type]
+        blocklisted_words=_parse_blocklisted_words_from_any(
+            scenario.get("blocklisted_words", scenario.get("blocklistedWords"))
+        ),
+        conversation=_parse_conversation(conversation_raw),
+    )
+
+
 def csv_row_to_audit_input(row: Dict[str, Any], row_num: int) -> AuditInput:
     send_id = str(row.get("SEND_ID", "")).strip()
     if not send_id:
@@ -100,6 +134,28 @@ def load_audit_input(path: Path, row_num: int = 1, send_id: str | None = None) -
     suffix = path.suffix.lower()
     if suffix == ".json":
         data = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(data, dict) and isinstance(data.get("scenarios"), list):
+            scenarios = data.get("scenarios", [])
+            selected: Dict[str, Any] | None = None
+            selected_row_num = row_num
+
+            if send_id:
+                for i, scenario in enumerate(scenarios, start=1):
+                    if str((scenario or {}).get("id", "")).strip() == send_id:
+                        selected = scenario
+                        selected_row_num = i
+                        break
+                if selected is None:
+                    raise ValueError(f"SEND_ID '{send_id}' was not found in JSON scenarios.")
+            else:
+                if row_num < 1:
+                    raise ValueError("JSON scenario row number must be >= 1.")
+                if row_num > len(scenarios):
+                    raise ValueError(f"JSON scenario row {row_num} not found.")
+                selected = scenarios[row_num - 1]
+
+            return scenario_to_audit_input(selected, selected_row_num)
+
         return AuditInput(**data)
 
     if suffix != ".csv":

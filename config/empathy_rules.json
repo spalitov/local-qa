@@ -2,7 +2,8 @@
   "when_required": [
     "Customer expresses frustration, disappointment, anger, or distress",
     "Customer reports a problem (broken, not working, charged incorrectly, delay)",
-    "Customer requests refund/cancellation due to negative experience"
+    "Customer requests refund/cancellation due to negative experience",
+    "Customer is excited or emotional about a positive experience and wants to share it"
   ],
   "required_components": [
     "Acknowledge the customer\u2019s situation/emotion",

@@ -1,14 +1,13 @@
 {
   "polished": {
-    "description": "Clear, confident, concise. Professional but not stiff. No slang.",
+    "description": "Clear, confident, concise. Friendly but not overly so. Contractions OK. No slang.",
     "do": [
       "Use concise sentences",
       "Be direct and helpful"
     ],
     "dont": [
       "Use slang",
-      "Overuse exclamation points",
-      "Be overly casual"
+      "Be overly formal"
     ]
   },
   "casual": {

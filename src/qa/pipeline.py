@@ -37,9 +37,6 @@ def _require_one_sentence(s: Any) -> str:
     txt = s.strip()
     if not txt:
         raise ValueError("LLM output 'finding' is empty")
-    sentence_parts = [p for p in re.split(r"(?<=[.!?])\s+", txt) if p.strip()]
-    if len(sentence_parts) > 1:
-        raise ValueError(f"LLM output 'finding' must be one sentence, got: {txt}")
     return txt
 
 
