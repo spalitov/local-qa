@@ -1,0 +1,20 @@
+You are grading ONLY these categories for the audited agent message:
+- understandable
+- preferred_tone_followed
+- empathy
+- personalization
+
+Return ONLY valid JSON matching exactly:
+{output_schema_json}
+
+Rules:
+- Every score must be 0 or 1.
+- finding should summarize the most important issues (or why it passes).
+- Use tone_rules.json only for preferred_tone_followed.
+- Use empathy_rules.json only for empathy, based on the prior customer message context.
+- Use personalization_rules.json only for personalization, based on the conversation context.
+- Consider blocklisted_words: if the audited agent message contains any, set ALL four scores to 0 and mention it in finding.
+- Do not grade grammar/typos/repetition; those are handled locally.
+
+Inputs (JSON):
+{payload_json}

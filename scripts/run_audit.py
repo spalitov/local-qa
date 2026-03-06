@@ -3,6 +3,7 @@ import json
 import sys
 from datetime import datetime
 from pathlib import Path
+from tqdm import tqdm
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 
@@ -13,7 +14,8 @@ def _print_usage() -> None:
     print(
         (
             "Usage: python scripts/run_audit.py <input.json|input.csv> "
-            "[--row N] [--send-id ID] [--all] [--out-dir DIR]"
+            "[--row N] [--send-id ID] [--all] [--out-dir DIR]\n"
+            "Defaults: audits all rows/scenarios and writes timestamped files to ./output"
         ),
         file=sys.stderr,
     )
@@ -92,9 +94,11 @@ def main():
 
         p = Path(sys.argv[1])
         row_num = 1
+        row_set = False
         send_id = None
-        audit_all = False
-        out_dir: Path | None = None
+        audit_all = True
+        explicit_all = False
+        out_dir: Path | None = Path("output")
 
         i = 2
         while i < len(sys.argv):
@@ -103,6 +107,7 @@ def main():
                 _print_usage()
                 sys.exit(0)
             if arg == "--all":
+                explicit_all = True
                 audit_all = True
                 i += 1
                 continue
@@ -116,6 +121,7 @@ def main():
                 if i + 1 >= len(sys.argv):
                     raise ValueError("--row requires a numeric value.")
                 row_num = int(sys.argv[i + 1])
+                row_set = True
                 i += 2
                 continue
             if arg == "--send-id":
@@ -131,6 +137,9 @@ def main():
         if audit_all and send_id:
             raise ValueError("Use either --all or --send-id, not both.")
 
+        if not explicit_all and (row_set or send_id is not None):
+            audit_all = False
+
         if audit_all:
             total = _count_input_rows(p)
             if total < 1:
@@ -139,7 +148,7 @@ def main():
             results: list[dict] = []
             failures: list[str] = []
 
-            for idx in range(1, total + 1):
+            for idx in tqdm(range(1, total + 1), desc="Auditing", unit="row"):
                 try:
                     audit_in = load_audit_input(p, row_num=idx)
                     out = run_audit(audit_in)
@@ -153,10 +162,7 @@ def main():
                     f"{failures[0] if failures else 'unknown error'}"
                 )
 
-            if out_dir:
-                _write_outputs(results, out_dir)
-            else:
-                print(json.dumps(results, indent=2, ensure_ascii=False))
+            _write_outputs(results, out_dir or Path("output"))
 
             if failures:
                 print(
@@ -168,11 +174,7 @@ def main():
         audit_in = load_audit_input(p, row_num=row_num, send_id=send_id)
         out = run_audit(audit_in).model_dump()
 
-        if out_dir:
-            _write_outputs([out], out_dir)
-            return
-
-        print(json.dumps(out, indent=2, ensure_ascii=False))
+        _write_outputs([out], out_dir or Path("output"))
     except Exception as exc:
         print(f"Error: {exc}", file=sys.stderr)
         sys.exit(1)

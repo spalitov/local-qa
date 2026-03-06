@@ -27,7 +27,7 @@ This project checks the quality of the **last agent reply** in a chat and gives 
 ## 4. Run an audit with CSV input
 The CSV can contain many conversations. This project audits one row at a time.
 
-1. Audit the first row:
+1. Audit the full file:
    - `python scripts/run_audit.py examples/input.csv`
 2. Audit a specific row number:
    - `python scripts/run_audit.py examples/input.csv --row 2`

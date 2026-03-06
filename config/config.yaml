@@ -10,9 +10,9 @@ models:
     model: "sentence-transformers/all-MiniLM-L6-v2"
 
 thresholds:
-  correct_grammar_max_grammar_errors: 0
-  no_typos_max_typos: 0
-  no_repetition_max_cosine: 0.86
+  correct_grammar_max_grammar_errors: 1
+  no_typos_max_typos: 1
+  no_repetition_max_cosine: 0.90
 
 grammar_tool:
   language: "en-US"
@@ -29,4 +29,4 @@ scoring:
     - personalization
 
 output:
-  include_full_conversation_json: true
+  include_full_conversation_json: false
