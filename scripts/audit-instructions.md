@@ -29,9 +29,11 @@ The CSV can contain many conversations. This project audits one row at a time.
 
 1. Audit the full file:
    - `python scripts/run_audit.py examples/input.csv`
-2. Audit a specific row number:
+2. Audit the full file with parallel workers:
+   - `python scripts/run_audit.py examples/input.csv --workers 4`
+3. Audit a specific row number:
    - `python scripts/run_audit.py examples/input.csv --row 2`
-3. Audit a specific conversation ID (`SEND_ID` in the CSV):
+4. Audit a specific conversation ID (`SEND_ID` in the CSV):
    - `python scripts/run_audit.py examples/input.csv --send-id 0192d5dd-50f3-46a9-f000-00009aac14d9`
 
 ## 5. Understand the result
@@ -44,3 +46,11 @@ The CSV can contain many conversations. This project audits one row at a time.
 2. Make sure the model exists (`ollama list`).
 3. Make sure your input has at least one `agent` message in the conversation.
 4. For CSV, ensure these columns exist: `SEND_ID`, `MESSAGE_TONE`, `CONVERSATION_JSON`, `BLOCKLISTED_WORDS`.
+
+## 7. Speed knobs
+1. Increase parallelism with `--workers N` (start with `2` to `4` and test).
+2. Tune Ollama request settings in `config/config.yaml` under `models.llm`:
+   - `keep_alive` keeps model weights loaded between requests.
+   - `options.num_predict` limits generation length.
+   - `options.num_ctx` sets context window size.
+   - `options.num_thread` controls CPU threads used by inference.

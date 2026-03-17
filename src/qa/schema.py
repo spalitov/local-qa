@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Any, Dict, List, Literal, Optional
 from pydantic import BaseModel, Field
 
-ToneName = Literal["polished", "casual", "formal"]
+ToneName = Literal["polished", "casual", "formal", "super_casual", "professional"]
 RoleName = Literal["system", "customer", "agent"]
 
 class Message(BaseModel):

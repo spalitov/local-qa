@@ -22,7 +22,31 @@
       "Overuse filler phrases"
     ]
   },
+  "super_casual": {
+    "description": "Friendly and conversational. Contractions OK. Still professional.",
+    "do": [
+      "Sound approachable",
+      "Use natural contractions when appropriate"
+    ],
+    "dont": [
+      "Be sloppy",
+      "Be sarcastic",
+      "Overuse filler phrases"
+    ]
+  },
   "formal": {
+    "description": "Professional, precise, courteous. Minimal contractions. Structured.",
+    "do": [
+      "Use explicit wording",
+      "Maintain neutral courtesy"
+    ],
+    "dont": [
+      "Use jokes",
+      "Use informal phrases",
+      "Be overly familiar"
+    ]
+  },
+  "professional": {
     "description": "Professional, precise, courteous. Minimal contractions. Structured.",
     "do": [
       "Use explicit wording",

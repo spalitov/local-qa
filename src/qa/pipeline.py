@@ -13,10 +13,12 @@ from .repetition_st import repetition_check
 from .llm_ollama import OllamaClient
 from .prompts import build_llm_only_prompt
 
+@lru_cache(maxsize=8)
 def _load_yaml(path: str) -> Dict[str, Any]:
     with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
+@lru_cache(maxsize=16)
 def _load_json(path: str) -> Dict[str, Any]:
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -124,6 +126,8 @@ def run_audit(
         model=llm_cfg["model"],
         temperature=float(llm_cfg.get("temperature", 0.0)),
         timeout_s=int(llm_cfg.get("timeout_s", 180)),
+        keep_alive=llm_cfg.get("keep_alive"),
+        options=llm_cfg.get("options", {}),
     )
 
     prompt = build_llm_only_prompt(llm_payload)

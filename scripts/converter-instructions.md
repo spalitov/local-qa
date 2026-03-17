@@ -9,27 +9,27 @@ Standalone utility that converts a scenario CSV into the JSON structure expected
 ## Run
 
 ```bash
-node tools/scenario-csv-json/convert.js --in <input.csv> --out <output.json>
+node scripts/convert_input.js --in <input.csv> --out <output.json>
 ```
 
 If `--out` is omitted, JSON is printed to stdout.
+
+Output scenarios keep full `conversation`, but omit:
+- `companyName`
+
+Kept fields include:
+- `escalation_preferences`
+- `blocklisted_words`
+- `rightPanel.promotions` (only `promotions` inside `rightPanel`, when present)
 
 ## Expected source columns
 
 Required:
 - `SEND_ID`
-- `COMPANY_NAME`
 
 Common optional columns supported:
-- `COMPANY_WEBSITE`
-- `PERSONA`
 - `MESSAGE_TONE`
 - `CONVERSATION_JSON`
-- `LAST_5_PRODUCTS`
-- `ORDERS`
-- `COMPANY_NOTES`
 - `ESCALATION_TOPICS`
 - `BLOCKLISTED_WORDS`
-- `HAS_SHOPIFY`
-- `COUPONS`
 - `COMPANY_PROMOTIONS`

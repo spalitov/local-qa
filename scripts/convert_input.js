@@ -445,29 +445,13 @@ function convertCsvRowToScenario(row) {
     if (normalized.content && normalized.content.length) promotions.push(normalized);
   }
 
-  const companyWebsite = getRowValue(row, ['COMPANY_WEBSITE', 'WEBSITE', 'SITE_URL']).trim();
-  const rightPanel = {
-    source: {
-      label: 'Website',
-      value: companyWebsite,
-      date: '',
-    },
-  };
-
-  if (browsingHistory.length) rightPanel.browsingHistory = browsingHistory;
-  if (orders.length) rightPanel.orders = orders;
-  if (coupons.length) rightPanel.coupons = coupons;
+  const rightPanel = {};
   if (promotions.length) rightPanel.promotions = promotions;
 
-  const notesText = getRowValue(row, ['COMPANY_NOTES', 'NOTES', 'GUIDELINES', 'INTERNAL_NOTES']);
   const scenario = {
     id: getRowValue(row, ['SEND_ID', 'SCENARIO_ID', 'ID']).trim(),
-    companyName: getRowValue(row, ['COMPANY_NAME', 'BRAND', 'COMPANY']).trim(),
-    companyWebsite,
-    agentName: getRowValue(row, ['PERSONA', 'AGENT_NAME', 'AGENT']).trim(),
     messageTone: getRowValue(row, ['MESSAGE_TONE', 'TONE']).trim(),
     conversation,
-    notes: parseCompanyNotesToCategories(notesText),
     rightPanel,
     escalation_preferences: parseListLikeText(
       getRowValue(row, ['ESCALATION_TOPICS', 'ESCALATION_PREFERENCES', 'ESCALATIONS'])
@@ -476,9 +460,6 @@ function convertCsvRowToScenario(row) {
       getRowValue(row, ['BLOCKLISTED_WORDS', 'BLOCKLIST_WORDS', 'BLOCKLIST', 'BLOCKED_WORDS'])
     ),
   };
-
-  const hasShopifyRaw = getRowValue(row, ['HAS_SHOPIFY', 'SHOPIFY', 'HAS_SHOPIFY_STORE']);
-  if (hasShopifyRaw.trim()) scenario.has_shopify = parseBool(hasShopifyRaw);
 
   return scenario;
 }
@@ -512,7 +493,7 @@ function run() {
 
   rows.forEach((row) => {
     const scenario = convertCsvRowToScenario(row);
-    if (!scenario.id || !scenario.companyName) {
+    if (!scenario.id) {
       skippedRows += 1;
       return;
     }
@@ -520,7 +501,7 @@ function run() {
   });
 
   if (!scenarios.length) {
-    console.error('No valid scenarios produced. Required columns: SEND_ID and COMPANY_NAME.');
+    console.error('No valid scenarios produced. Required column: SEND_ID.');
     process.exit(1);
   }
 
@@ -536,7 +517,7 @@ function run() {
   }
 
   if (skippedRows > 0) {
-    console.error(`Skipped ${skippedRows} row(s) missing SEND_ID or COMPANY_NAME.`);
+    console.error(`Skipped ${skippedRows} row(s) missing SEND_ID.`);
   }
 }
 

@@ -5,6 +5,11 @@ models:
     model: "llama3.1:8b"
     temperature: 0.0
     timeout_s: 180
+    keep_alive: "20m"
+    options:
+      num_predict: 120
+      num_ctx: 4096
+      num_thread: 8
 
   repetition_embeddings:
     model: "sentence-transformers/all-MiniLM-L6-v2"

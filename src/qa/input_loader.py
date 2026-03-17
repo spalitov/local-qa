@@ -17,6 +17,10 @@ _TONE_MAP = {
     "polished": "polished",
     "casual": "casual",
     "formal": "formal",
+    "super casual": "super_casual",
+    "super_casual": "super_casual",
+    "super-casual": "super_casual",
+    "professional": "professional",
 }
 
 
@@ -24,7 +28,7 @@ def _normalize_tone(value: Any) -> str:
     tone = str(value or "").strip().lower()
     if tone not in _TONE_MAP:
         raise ValueError(
-            f"Unsupported tone '{value}'. Expected one of: polished, casual, formal."
+            f"Unsupported tone '{value}'. Expected one of: polished, casual, formal, super casual, professional."
         )
     return _TONE_MAP[tone]
 
@@ -39,7 +43,13 @@ def _parse_json_list(raw: Any, field_name: str) -> List[Any]:
     if not text:
         return []
     if text.startswith("["):
-        parsed = json.loads(text)
+        try:
+            parsed = json.loads(text)
+        except json.JSONDecodeError as exc:
+            raise ValueError(
+                f"{field_name} contains invalid JSON: {exc.msg} at line {exc.lineno} "
+                f"column {exc.colno} (char {exc.pos})."
+            ) from exc
         if not isinstance(parsed, list):
             raise ValueError(f"{field_name} must be a JSON array.")
         return parsed
